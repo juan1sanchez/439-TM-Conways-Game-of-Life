@@ -1,0 +1,51 @@
+/*centers the title and makes it pretty*/
+h1 {
+  color: #2E2478;
+  font-family: Impact;
+  font-size: 200%;
+}
+/*gets rid of the dots from uls*/
+ul { list-style-type: none; }
+/*creates the grid*/
+.graph {
+  display: inline-grid;
+  transform: rotate(90deg);
+  padding: 5px;
+  border: 1px #e1e4e8 solid;
+}
+.squares {
+  display: grid;
+  --square-size: 4px;
+  grid-gap: 0.5px;
+  grid-template-rows: repeat(400, var(--square-size));/*number of rows*/
+  grid-auto-flow: column;/*columns auto generated*/
+  grid-auto-columns: var(--square-size);
+}
+
+h1{
+	color: #581845;
+}
+
+/*square colors*/
+.squares li{ background-color: #ebedf0; }/*blank*/
+.squares li[data-level="1"] { background-color: #000000; }/*black*/
+/*CSS code that was initially given to us*/
+body {
+  font-family: sans-serif;
+  background-color: #F9C6E3;
+  text-align: center;
+
+}
+canvas {
+  background-color: black;
+}
+
+div {
+    position: absolute;
+    background-color: #abc;
+    top: 3px;
+    left: 3px;
+    width: 10px;
+    height: 10px;
+    margin: 5px;
+  }
