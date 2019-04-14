@@ -1,17 +1,16 @@
 var refreshIntervalId = 0;
-  var aliveNeighbors = 0;
+var aliveNeighbors = 0;
 
 
 // creates a multi dimentional array of size 400x400
-var SIZE2 = 8;
-var SIZE = 8;
+var SIZE2 = 35;
+var SIZE = 20;
 var matrix = createMatrix(SIZE, SIZE2);
 var matrix2 = createMatrix(SIZE, SIZE2);
 
 
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext("2d");
-  
   
 makeGrid();
 fillMatrix();
@@ -31,21 +30,21 @@ function makeGrid()
 	var x =0;
 	var	y=0;
 	
-	ctx.clearRect(0, 0, 80, 80); // clear canvas	
+	ctx.clearRect(0, 0, 350, 350); // clear canvas	
 	
-	for( i = 0; i < 8; i++)
+	for( i = 0; i < SIZE; i++)
 	{
-		
-		ctx.strokeRect(x,y,10,10);
-		ctx.strokeRect(x,y+10,10,10);
-		ctx.strokeRect(x,y+20,10,10);
-		ctx.strokeRect(x,y+30,10,10);
-		ctx.strokeRect(x,y+40,10,10);	
-		ctx.strokeRect(x,y+50,10,10);	
-		ctx.strokeRect(x,y+60,10,10);		
-		ctx.strokeRect(x,y+70,10,10);		
+		x = 0;
 
-		x += 10;
+		
+		for (j = 0; j < SIZE2; j++)
+		{
+			ctx.strokeRect(x,y,10,10);
+			x += 10;
+		}
+		
+		y += 10;
+
 	}
 }
 
@@ -53,42 +52,95 @@ function aliveOrDead()
 {
 	
   makeGrid();	
-	
-	
-	
-  for(var i = 1; i <= 6; i++)
+		
+  for(var i = 0; i < SIZE; i++)
   {
-	    for(var j = 1; j <= 6; j++)
+	    for(var j = 0; j < SIZE2; j++)
 		{   
+			
 			aliveNeighbors = 0;
 	
-			aliveNeighbors += matrix[i-1][j-1];
-			aliveNeighbors += matrix[i-1][j];
-			aliveNeighbors += matrix[i-1][j+1];
-			aliveNeighbors += matrix[i][j-1];
-			aliveNeighbors += matrix[i][j+1];
-			aliveNeighbors += matrix[i+1][j-1];
-			aliveNeighbors += matrix[i+1][j];
-			aliveNeighbors += matrix[i+1][j+1];
+			if (i == 0 && j == 0)
+			{
+				aliveNeighbors += matrix[i+1][j];
+				aliveNeighbors += matrix[i][j-1];
+				aliveNeighbors += matrix[i+1][j-1];
+			}
+			else if (i == SIZE-1 && j == SIZE2-1 )
+			{
+				aliveNeighbors += matrix[i][j+1]
+				aliveNeighbors += matrix[i-1][j+1]
+				aliveNeighbors += matrix[i-1][j]
+			}
+			else if (i == 0 && j == SIZE2-1 )
+			{
+				aliveNeighbors += matrix[i][j+1]
+				aliveNeighbors += matrix[i][j+1]
+				aliveNeighbors += matrix[i+1][j+1]
+			}
+			
+			else if (i == SIZE-1 && j == 0 )
+			{
+				aliveNeighbors += matrix[i][j+1]
+				aliveNeighbors += matrix[i-1][j+1]
+				aliveNeighbors += matrix[i-1][j]
+			}			
+			else if(j == 0)
+			{
+				aliveNeighbors += matrix[i-1][j];
+				aliveNeighbors += matrix[i+1][j];				
+				aliveNeighbors += matrix[i][j+1];
+				aliveNeighbors += matrix[i-1][j+1];
+				aliveNeighbors += matrix[i+1][j+1];					
+			}
+			else if (i == 0)
+			{
+				aliveNeighbors += matrix[i+1][j-1];
+				aliveNeighbors += matrix[i+1][j];
+				aliveNeighbors += matrix[i+1][j+1];				
+				aliveNeighbors += matrix[i][j+1];
+				aliveNeighbors += matrix[i][j-1];
+			}				
 
+			else if (i == SIZE-1)
+			{
+				aliveNeighbors += matrix[i][j+1]
+				aliveNeighbors += matrix[i][j-1]
+				aliveNeighbors += matrix[i-1][j-1]				
+				aliveNeighbors += matrix[i-1][j+1]
+				aliveNeighbors += matrix[i-1][j]
+			}
+			else if (j == SIZE2-1 )
+			{
+				aliveNeighbors += matrix[i-1][j-1];
+				aliveNeighbors += matrix[i-1][j];
+				aliveNeighbors += matrix[i][j-1];
+				aliveNeighbors += matrix[i+1][j-1];
+				aliveNeighbors += matrix[i+1][j];
+			}
+			else
+			{
+				aliveNeighbors += matrix[i-1][j-1];
+				aliveNeighbors += matrix[i-1][j];
+				aliveNeighbors += matrix[i-1][j+1];
+				aliveNeighbors += matrix[i][j-1];
+				aliveNeighbors += matrix[i][j+1];
+				aliveNeighbors += matrix[i+1][j-1];
+				aliveNeighbors += matrix[i+1][j];
+				aliveNeighbors += matrix[i+1][j+1];
+			}
 	
 			//Is it Dead?
 			if(matrix[i][j] == 0)
 			{
-		
-		
 				
 				if (aliveNeighbors == 3)
 				{
-
 					matrix2[i][j] = 1;
 					ctx.fillRect(i*10, j*10 , 10, 10);
-
-
 				}
 				else
 				{
-					//console.log( "die");
 					matrix2[i][j] = 0;
 				}
 			}
@@ -96,14 +148,10 @@ function aliveOrDead()
 			else
 			{
 				
-				
-				
 				if (aliveNeighbors == 2 || aliveNeighbors == 3)
 				{
 					matrix2[i][j] = 1;
 					ctx.fillRect(i*10, j*10 , 10, 10);
-
-
 				}
 				else
 				{
@@ -116,11 +164,7 @@ function aliveOrDead()
 
 		}
 		
-
-		
   }
-
-
 
    for(var i = 0; i < SIZE; i++)
   {
@@ -142,12 +186,17 @@ function fillMatrix()
   {
 	    for(var j = 0; j < SIZE2; j++)
 		{   
-			if(j == 3 && i >= 3 && i <= 5)
+			if(j == 4 && i == 4)
 			{
 				matrix[i][j] = 1;
 				ctx.fillRect(i*10, j*10 , 10, 10);
 			}
-			else if(j == 4 && i >= 2 && i <= 4)
+			else if(j == 5 && i >= 5 && i <= 6)
+			{
+				matrix[i][j] = 1;
+				ctx.fillRect(i*10, j*10 , 10, 10);
+			}
+			else if(j == 6 && i >= 4 && i <= 5)
 			{
 				matrix[i][j] = 1;
 				ctx.fillRect(i*10, j*10 , 10, 10);
@@ -160,9 +209,6 @@ function fillMatrix()
 		}
 		
   }
-  
- 
-    
 }
 
 /* function that creates a matrix
