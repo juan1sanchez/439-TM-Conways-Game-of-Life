@@ -1,6 +1,6 @@
 /*centers the title and makes it pretty*/
 h1 {
-  color: #2E2478;
+  color: #006600;
   font-family: Impact;
   font-size: 200%;
 }
@@ -22,9 +22,6 @@ ul { list-style-type: none; }
   grid-auto-columns: var(--square-size);
 }
 
-h1{
-	color: #581845;
-}
 
 /*square colors*/
 .squares li{ background-color: #ebedf0; }/*blank*/
@@ -32,12 +29,12 @@ h1{
 /*CSS code that was initially given to us*/
 body {
   font-family: sans-serif;
-  background-color: #F9C6E3;
+  background-color: #99ff99;
   text-align: center;
 
 }
 canvas {
-  background-color: black;
+  background-color: white;
 }
 
 div {
