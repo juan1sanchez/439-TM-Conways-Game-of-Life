@@ -1,10 +1,12 @@
 var refreshIntervalId = 0;
+var secondIntervalID = 0;
 var aliveNeighbors = 0;
 
 
 // creates a multi dimentional array of size 400x400
-var SIZE2 = 35;
-var SIZE = 20;
+var SIZE2 = 20;
+var SIZE = 35;
+var intervalTimer = 3020;
 var matrix = createMatrix(SIZE, SIZE2);
 var matrix2 = createMatrix(SIZE, SIZE2);
 
@@ -17,7 +19,8 @@ fillMatrix();
   
 function autoRun()
 {
-refreshIntervalId = setInterval(aliveOrDead, 1010);//don't change time, this connects with how fast animations go
+refreshIntervalId = setInterval(aliveOrDead, intervalTimer);
+intervalTimer = intervalTimer / 2;
 }
 
 function pause()
@@ -30,14 +33,14 @@ function makeGrid()
 	var x =0;
 	var	y=0;
 	
-	ctx.clearRect(0, 0, 350, 350); // clear canvas	
+	ctx.clearRect(0, 0, 350, 200); // clear canvas	
 	
-	for( i = 0; i < SIZE; i++)
+	for( i = 0; i < SIZE2; i++)
 	{
 		x = 0;
 
 		
-		for (j = 0; j < SIZE2; j++)
+		for (j = 0; j < SIZE; j++)
 		{
 			ctx.strokeRect(x,y,10,10);
 			x += 10;
@@ -48,119 +51,72 @@ function makeGrid()
 	}
 }
 
+function survivalLogic(  i, j)
+{
+	aliveNeighbors = 0;
+	
+	// i = size, j = size2
+	
+		for (var k = i - 1; k <= i + 1; k++)
+		{
+			for (var l = j - 1; l <= j + 1; l++)
+			{
+
+				if ( k < 0 || l < 0 || k >= SIZE-1 || l >= SIZE2-1)
+				{
+					//Do nothing
+				}
+				else
+				{
+					console.log( "k[" + k + "] l[" + l + "] = " + aliveNeighbors);	
+					aliveNeighbors += matrix[k][l];
+				}
+			
+			}
+		}
+	
+//Is it Dead?
+	if(matrix[i][j] == 0)
+	{		
+		if (aliveNeighbors == 3)
+		{
+			matrix2[i][j] = 1;
+			ctx.fillRect(i*10, j*10 , 10, 10);
+		}
+		else
+		{
+			matrix2[i][j] = 0;
+		}
+	}
+	//If its not dead, its alive!
+	else
+	{		
+		if (aliveNeighbors == 2 || aliveNeighbors == 3)
+		{
+			matrix2[i][j] = 1;
+			ctx.fillRect(i*10, j*10 , 10, 10);
+		}
+		else
+		{
+			matrix2[i][j] = 0;
+		}
+	}
+
+}
+
 function aliveOrDead()
 {
 	
   makeGrid();	
+  
+  var secondTimer = intervalTimer / 375;
 		
   for(var i = 0; i < SIZE; i++)
   {
 	    for(var j = 0; j < SIZE2; j++)
 		{   
 			
-			aliveNeighbors = 0;
-	
-			if (i == 0 && j == 0)
-			{
-				aliveNeighbors += matrix[i+1][j];
-				aliveNeighbors += matrix[i][j-1];
-				aliveNeighbors += matrix[i+1][j-1];
-			}
-			else if (i == SIZE-1 && j == SIZE2-1 )
-			{
-				aliveNeighbors += matrix[i][j+1]
-				aliveNeighbors += matrix[i-1][j+1]
-				aliveNeighbors += matrix[i-1][j]
-			}
-			else if (i == 0 && j == SIZE2-1 )
-			{
-				aliveNeighbors += matrix[i][j+1]
-				aliveNeighbors += matrix[i][j+1]
-				aliveNeighbors += matrix[i+1][j+1]
-			}
-			
-			else if (i == SIZE-1 && j == 0 )
-			{
-				aliveNeighbors += matrix[i][j+1]
-				aliveNeighbors += matrix[i-1][j+1]
-				aliveNeighbors += matrix[i-1][j]
-			}			
-			else if(j == 0)
-			{
-				aliveNeighbors += matrix[i-1][j];
-				aliveNeighbors += matrix[i+1][j];				
-				aliveNeighbors += matrix[i][j+1];
-				aliveNeighbors += matrix[i-1][j+1];
-				aliveNeighbors += matrix[i+1][j+1];					
-			}
-			else if (i == 0)
-			{
-				aliveNeighbors += matrix[i+1][j-1];
-				aliveNeighbors += matrix[i+1][j];
-				aliveNeighbors += matrix[i+1][j+1];				
-				aliveNeighbors += matrix[i][j+1];
-				aliveNeighbors += matrix[i][j-1];
-			}				
-
-			else if (i == SIZE-1)
-			{
-				aliveNeighbors += matrix[i][j+1]
-				aliveNeighbors += matrix[i][j-1]
-				aliveNeighbors += matrix[i-1][j-1]				
-				aliveNeighbors += matrix[i-1][j+1]
-				aliveNeighbors += matrix[i-1][j]
-			}
-			else if (j == SIZE2-1 )
-			{
-				aliveNeighbors += matrix[i-1][j-1];
-				aliveNeighbors += matrix[i-1][j];
-				aliveNeighbors += matrix[i][j-1];
-				aliveNeighbors += matrix[i+1][j-1];
-				aliveNeighbors += matrix[i+1][j];
-			}
-			else
-			{
-				aliveNeighbors += matrix[i-1][j-1];
-				aliveNeighbors += matrix[i-1][j];
-				aliveNeighbors += matrix[i-1][j+1];
-				aliveNeighbors += matrix[i][j-1];
-				aliveNeighbors += matrix[i][j+1];
-				aliveNeighbors += matrix[i+1][j-1];
-				aliveNeighbors += matrix[i+1][j];
-				aliveNeighbors += matrix[i+1][j+1];
-			}
-	
-			//Is it Dead?
-			if(matrix[i][j] == 0)
-			{
-				
-				if (aliveNeighbors == 3)
-				{
-					matrix2[i][j] = 1;
-					ctx.fillRect(i*10, j*10 , 10, 10);
-				}
-				else
-				{
-					matrix2[i][j] = 0;
-				}
-			}
-			//If its not dead, its alive!
-			else
-			{
-				
-				if (aliveNeighbors == 2 || aliveNeighbors == 3)
-				{
-					matrix2[i][j] = 1;
-					ctx.fillRect(i*10, j*10 , 10, 10);
-				}
-				else
-				{
-					matrix2[i][j] = 0;
-				}
-
-			}
-
-			console.log( "i[" + i + "] j[" + j + "] = " + aliveNeighbors);
+			survivalLogic(i,j);
 
 		}
 		
@@ -186,21 +142,47 @@ function fillMatrix()
   {
 	    for(var j = 0; j < SIZE2; j++)
 		{   
-			if(j == 4 && i == 4)
+			if(j >= 5 && j < 10 && i ==5)
 			{
 				matrix[i][j] = 1;
 				ctx.fillRect(i*10, j*10 , 10, 10);
 			}
-			else if(j == 5 && i >= 5 && i <= 6)
+			else if(i == 9 && j >= 5 && j < 10)
 			{
 				matrix[i][j] = 1;
 				ctx.fillRect(i*10, j*10 , 10, 10);
 			}
-			else if(j == 6 && i >= 4 && i <= 5)
+			else if(i == 7 && j == 5)
 			{
 				matrix[i][j] = 1;
 				ctx.fillRect(i*10, j*10 , 10, 10);
 			}
+			else if(i == 7 && j == 9)
+			{
+				matrix[i][j] = 1;
+				ctx.fillRect(i*10, j*10 , 10, 10);
+			}
+			/*
+			else if(j >= 5 && j < 10 && i ==25)
+			{
+				matrix[i][j] = 1;
+				ctx.fillRect(i*10, j*10 , 10, 10);
+			}
+			else if(i == 29 && j >= 5 && j < 10)
+			{
+				matrix[i][j] = 1;
+				ctx.fillRect(i*10, j*10 , 10, 10);
+			}
+			else if(i == 27 && j == 5)
+			{
+				matrix[i][j] = 1;
+				ctx.fillRect(i*10, j*10 , 10, 10);
+			}
+			else if(i == 27 && j == 9)
+			{
+				matrix[i][j] = 1;
+				ctx.fillRect(i*10, j*10 , 10, 10);
+			}*/
 			else
 			{
 				matrix[i][j] = 0;
