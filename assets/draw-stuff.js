@@ -3,16 +3,20 @@ var secondIntervalID = 0;
 var aliveNeighbors = 0;
 
 
-// creates a multi dimentional array of size 400x400
+// creates a multi dimentional array of size 20x35
 var SIZE2 = 20;
 var SIZE = 35;
-var intervalTimer = 3020;
+var intervalTimer = 375000;
 var matrix = createMatrix(SIZE, SIZE2);
 var matrix2 = createMatrix(SIZE, SIZE2);
+var stageMatrix = createMatrix(3,3);
 
 
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext("2d");
+
+var stageCanvas = document.getElementById('stageCanvas');
+var stageCtx = stageCanvas.getContext("2d");
   
 makeGrid();
 fillMatrix();
@@ -49,6 +53,25 @@ function makeGrid()
 		y += 10;
 
 	}
+	
+	stageCtx.clearRect(0, 0, 30, 30); // clear canvas	
+	
+	y = 0;
+	
+	for( k = 0; k < 3; k++)
+	{
+		x = 0;
+
+		
+		for (l = 0; l < 3; l++)
+		{
+			stageCtx.strokeRect(x,y,10,10);
+			x += 10;
+		}
+		
+		y += 10;
+
+	}
 }
 
 function survivalLogic(  i, j)
@@ -66,10 +89,15 @@ function survivalLogic(  i, j)
 				{
 					//Do nothing
 				}
+				else if ( k == i && l == j)
+				{
+					//Once again, do nothing
+				}
 				else
 				{
 					console.log( "k[" + k + "] l[" + l + "] = " + aliveNeighbors);	
 					aliveNeighbors += matrix[k][l];
+					stageMatrix[k-i+1][l-j+1] = matrix[k][l];
 				}
 			
 			}
@@ -101,6 +129,25 @@ function survivalLogic(  i, j)
 			matrix2[i][j] = 0;
 		}
 	}
+	
+	for( i = 0; i < 3; i++)
+	{
+		
+
+		
+		for (j = 0; j < 3; j++)
+		{
+			if(stageMatrix[i][j] == 1)
+			{
+				stageCtx.fillRect(i*10,j*10, 10, 10);
+			}
+		}
+		
+		
+
+	}
+	
+	
 
 }
 
@@ -116,7 +163,7 @@ function aliveOrDead()
 	    for(var j = 0; j < SIZE2; j++)
 		{   
 			
-			survivalLogic(i,j);
+			secondIntervalID = setInterval(survivalLogic(i,j), secondTimer);
 
 		}
 		
