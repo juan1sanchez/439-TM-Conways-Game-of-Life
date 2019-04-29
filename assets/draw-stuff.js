@@ -11,10 +11,11 @@ var matrix = createMatrix(SIZE, SIZE2);
 var matrix2 = createMatrix(SIZE, SIZE2);
 var stageMatrix = createMatrix(3,3);
 
-
+//Setups main canvas
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext("2d");
 
+//Setups stage canvas
 var stageCanvas = document.getElementById('stageCanvas');
 var stageCtx = stageCanvas.getContext("2d");
   
@@ -23,54 +24,42 @@ fillMatrix();
   
 function autoRun()
 {
-refreshIntervalId = setInterval(aliveOrDead, intervalTimer);
-intervalTimer = intervalTimer / 2;
+	refreshIntervalId = setInterval(aliveOrDead, intervalTimer);
+	intervalTimer = intervalTimer / 2;
 }
 
 function pause()
 {
-  clearInterval(refreshIntervalId);
+	clearInterval(refreshIntervalId);
 }
 
 function makeGrid()
 {
-	var x =0;
-	var	y=0;
+
 	
 	ctx.clearRect(0, 0, 350, 200); // clear canvas	
 	
-	for( i = 0; i < SIZE2; i++)
+	for( i = 0; i < SIZE; i++)
 	{
-		x = 0;
-
 		
-		for (j = 0; j < SIZE; j++)
+		for (j = 0; j < SIZE2; j++)
 		{
-			ctx.strokeRect(x,y,10,10);
-			x += 10;
+			ctx.strokeRect(i*10,j*10,10,10);
 		}
 		
-		y += 10;
-
 	}
 	
 	stageCtx.clearRect(0, 0, 30, 30); // clear canvas	
 	
-	y = 0;
 	
 	for( k = 0; k < 3; k++)
 	{
-		x = 0;
-
 		
 		for (l = 0; l < 3; l++)
 		{
-			stageCtx.strokeRect(x,y,10,10);
-			x += 10;
+			stageCtx.strokeRect(k*10,l*10,10,10);
 		}
 		
-		y += 10;
-
 	}
 }
 
@@ -85,7 +74,7 @@ function survivalLogic(  i, j)
 			for (var l = j - 1; l <= j + 1; l++)
 			{
 
-				if ( k < 0 || l < 0 || k >= SIZE-1 || l >= SIZE2-1)
+				if ( k < 0 || l < 0 || k > SIZE-1 || l > SIZE2-1)
 				{
 					//Do nothing
 				}
@@ -130,21 +119,29 @@ function survivalLogic(  i, j)
 		}
 	}
 	
+		stageCtx.clearRect(0, 0, 30, 30); // clear canvas	
+
+		
+		for( k = 0; k < 3; k++)
+		{
+
+			for (l = 0; l < 3; l++)
+			{
+				stageCtx.strokeRect(k*10,l*10,10,10);
+			}
+		}
+	
 	for( i = 0; i < 3; i++)
 	{
 		
-
-		
 		for (j = 0; j < 3; j++)
 		{
+			
 			if(stageMatrix[i][j] == 1)
 			{
 				stageCtx.fillRect(i*10,j*10, 10, 10);
 			}
 		}
-		
-		
-
 	}
 	
 	
@@ -209,7 +206,7 @@ function fillMatrix()
 				matrix[i][j] = 1;
 				ctx.fillRect(i*10, j*10 , 10, 10);
 			}
-			/*
+			
 			else if(j >= 5 && j < 10 && i ==25)
 			{
 				matrix[i][j] = 1;
@@ -229,7 +226,7 @@ function fillMatrix()
 			{
 				matrix[i][j] = 1;
 				ctx.fillRect(i*10, j*10 , 10, 10);
-			}*/
+			}
 			else
 			{
 				matrix[i][j] = 0;
